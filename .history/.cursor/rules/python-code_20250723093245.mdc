@@ -1,0 +1,91 @@
+# Python代码规范
+
+## 代码风格
+- 遵循PEP 8代码风格指南
+- 使用4个空格进行缩进，不使用tab
+- 行长度限制在120个字符以内
+- 使用Google风格的文档字符串(docstrings)
+
+## 导入规范
+- 按以下顺序组织导入：
+  1. 标准库导入
+  2. 相关第三方库导入
+  3. 本地应用/库特定导入
+- 每组导入之间应有一个空行
+- 避免使用通配符导入 `from module import *`
+
+## 深度学习特定规范
+- PyTorch是主要的深度学习框架
+- 使用segmentation_models_pytorch库进行分割任务
+- 使用YOLOv5进行目标检测任务
+- 模型定义应放在相应的model.py文件中
+- 数据加载和预处理应放在dataloader.py和datasets.py中
+
+## 注释和文档
+- 为复杂的函数和类添加文档字符串
+- 对于复杂的算法或操作，添加行内注释
+- 保持代码自注释性，使用清晰的变量和函数名称 
+
+## 分割模型修改
+
+1. **修改 src/models/segmentation/transformers.py**:
+   - 将所有的256x256尺寸修改为640x640
+
+```python
+def get_training_augmentation():
+    train_transform = [
+        # ...其他变换保持不变
+        A.PadIfNeeded(min_height=640, min_width=640, always_apply=True, border_mode=0),
+        A.RandomCrop(height=640, width=640, always_apply=True),
+        # ...
+    ]
+    return A.Compose(train_transform)
+
+def get_validation_augmentation():
+    test_transform = [
+        A.PadIfNeeded(640, 640)
+    ]
+    return A.Compose(test_transform)
+```
+
+2. **修改 src/models/segmentation/train.py** 中的批量大小:
+   - 由于图像尺寸增大，可能需要减小批量大小以避免内存不足问题
+   - 修改 `'batch_size': 16` 为较小的值，如 `'batch_size': 4` 或 `'batch_size': 8`，视您的GPU内存而定
+
+## YOLOv5模型修改
+
+1. **YOLOv5默认已经使用640x640**:
+   - YOLOv5训练脚本默认使用640x640的图像尺寸
+   - 在使用 `src/models/yolo/yolov5/train.py` 时添加 `--img 640` 参数（这已经是默认值）
+
+2. **确保数据预处理兼容640x640**:
+   - 如果您有自定义的预处理代码，确保它们能处理640x640的图像
+   - 检查 `src/models/yolo/yolov5/utils/datasets.py` 中的图像加载逻辑是否能适应640x640
+
+## 修改建议总结
+
+1. **分割模型**:
+   ```python
+   # src/models/segmentation/transformers.py
+   # 修改所有256为640
+   A.PadIfNeeded(min_height=640, min_width=640, always_apply=True, border_mode=0),
+   A.RandomCrop(height=640, width=640, always_apply=True),
+   ```
+
+   ```python
+   # src/models/segmentation/train.py
+   # 减小批量大小以适应更大的图像
+   'batch_size': 8,  # 原来是16
+   ```
+
+2. **YOLO模型**:
+   - 运行训练命令时指定图像尺寸：
+   ```bash
+   python src/models/yolo/yolov5/train.py --img 640 --batch 16 --epochs 50 --data src/models/yolo/sp_dataset.yaml --weights yolov5s.pt
+   ```
+   - 可能需要根据GPU内存调整批量大小（--batch参数）
+
+这些修改应该允许您使用640x640图像在预训练模型基础上进行微调。根据您的GPU内存，可能需要进一步调整批量大小和其他训练参数。 
+- 为复杂的函数和类添加文档字符串
+- 对于复杂的算法或操作，添加行内注释
+- 保持代码自注释性，使用清晰的变量和函数名称 
