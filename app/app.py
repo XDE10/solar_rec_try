@@ -243,7 +243,7 @@ def deploy1(uploaded_file, uploaded_mask=None):
     # model = get_model(ARCH, BACKBONE, n_classes, activation)
 
     try:
-        model = torch.load(model_path, map_location='cpu')
+        model = torch.load(model_path, map_location='cpu', weights_only=False)
     except RuntimeError as e:
         st.error(f"模型加载失败: {model_path} 可能已损坏或不是有效的PyTorch模型文件。")
         st.error(f"错误信息: {str(e)}")
