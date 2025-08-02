@@ -3,7 +3,10 @@ import os
 import torch
 from pathlib import Path
 import streamlit as st
+from streamlit_change_language import cst
 
+# 将Streamlit界面汉化
+cst.change(language='cn')
 
 # PAge layout
 ## Page expands to full width

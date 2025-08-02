@@ -1,0 +1,33 @@
+---
+description: 模型使用和实现指南
+---
+# 模型使用和实现指南
+
+## 分割模型
+- 使用`segmentation_models_pytorch`库作为语义分割的基础
+- 支持的骨干网络包括：ResNet, EfficientNet, MobileNet等
+- 支持的分割架构包括：UNet, FPN, DeepLabV3+, PSPNet等
+- 主要实现在`src/models/segmentation/`目录中
+- 数据加载和预处理在`dataloader.py`和`datasets.py`中定义
+- 训练流程在`train.py`中，推理流程在`inference.py`中
+
+## 目标检测模型
+- 使用YOLOv5进行目标检测
+- 所有YOLOv5相关代码在`src/models/yolo/yolov5/`目录中
+- 训练配置文件在`src/models/yolo/sp_dataset.yaml`中
+- 使用`train.py`进行训练，`detect.py`进行推理
+- 图像标注应遵循YOLO格式
+
+## 模型训练最佳实践
+- 在训练前设置随机种子确保可重复性
+- 使用适当的学习率调度器（如CosineAnnealingLR）
+- 实现早停以避免过拟合
+- 定期保存检查点，特别是在性能提升时
+- 使用混合精度训练加速训练过程
+- 在训练期间监控验证集性能
+
+## 模型评估
+- 对于分割任务，使用IoU, Dice系数等指标
+- 对于检测任务，使用mAP, Precision, Recall等指标
+- 使用混淆矩阵进行错误分析
+- 在测试集上进行最终评估，不要在此数据上调整超参数
