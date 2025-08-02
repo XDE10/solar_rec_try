@@ -164,7 +164,7 @@ st.sidebar.markdown("")
 img_dir = 'data'
 img_files = list(filter(lambda x: 'label' not in x, os.listdir(img_dir)))
 
-model_dir = '../models'
+model_dir = 'models'
 models = {
     ' + '.join(get_model_info(model)[:2]).upper():
         {'ARCH': get_model_info(model)[0],
