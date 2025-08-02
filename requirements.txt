@@ -14,4 +14,4 @@ timm==0.4.12
 tqdm
 matplotlib
 streamlit_change_language
-
+scikit-image
