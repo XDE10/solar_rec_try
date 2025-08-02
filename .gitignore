@@ -97,10 +97,7 @@ src/models/yolo/wandb
 src/models/yolo/yolov5/runs
 
 *.zip
-*.pt
 *.npy
 *.docx
 *.h5
-*.pth
 *.bmp
-*.png
