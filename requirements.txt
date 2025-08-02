@@ -14,3 +14,4 @@ tqdm
 matplotlib
 streamlit_change_language
 scikit-image
+segmentation-models-pytorch==0.2.1
