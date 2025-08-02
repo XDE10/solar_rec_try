@@ -1,6 +1,5 @@
 torch>=1.7.0
 streamlit>=1.0.0
-segmentation_models_pytorch>=0.2.0
 opencv-python>=4.5.0
 numpy>=1.19.0
 pathlib>=1.0.0
